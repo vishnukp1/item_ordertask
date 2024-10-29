@@ -1,13 +1,47 @@
 import Item from "../models/itemSchema.js";
 
 export const createItem = async (req, res) => {
-  console.log("body", req.body);
-  const item = await Item.create(req.body);
-  res.status(201).json({
-    status: "success",
-    message: "Item created Successfully",
-    data: item,
-  });
+  try {
+    const {
+      name,
+      location,
+      brand,
+      category,
+      supplierId,
+      stockUnit,
+      unitPrice,
+      status,
+    } = req.body;
+
+    const imagePaths = req.files
+      ? req.files.map((file) => `/uploads/${file.filename}`)
+      : [];
+
+    console.log(imagePaths);
+
+    const newItem = {
+      name,
+      location,
+      brand,
+      category,
+      supplierId,
+      stockUnit,
+      unitPrice,
+      status,
+      images: imagePaths,
+    };
+
+    const item = await Item.create(newItem);
+    res.status(201).json({
+      status: "success",
+      message: "Item created successfully",
+      data: item,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "error", message: "Failed to create item", error });
+  }
 };
 
 export const getItems = async (req, res) => {

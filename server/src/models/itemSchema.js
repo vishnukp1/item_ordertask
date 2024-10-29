@@ -9,6 +9,7 @@ const itemSchema = new mongoose.Schema({
   stockUnit: String,
   unitPrice: Number,
   status: { type: String, default: "Enabled" },
+  images: [String], 
 });
 
 const Item = mongoose.model("Item", itemSchema);
