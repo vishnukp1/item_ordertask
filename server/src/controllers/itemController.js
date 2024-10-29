@@ -1,7 +1,7 @@
 import Item from "../models/itemSchema.js";
 
 export const createItem = async (req, res) => {
-  try {
+
     const {
       name,
       location,
@@ -37,12 +37,8 @@ export const createItem = async (req, res) => {
       message: "Item created successfully",
       data: item,
     });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ status: "error", message: "Failed to create item", error });
-  }
-};
+  } 
+
 
 export const getItems = async (req, res) => {
   const items = await Item.find().populate("supplierId");
