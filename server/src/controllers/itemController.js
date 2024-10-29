@@ -17,8 +17,6 @@ export const createItem = async (req, res) => {
       ? req.files.map((file) => `/uploads/${file.filename}`)
       : [];
 
-    console.log(imagePaths);
-
     const newItem = {
       name,
       location,
