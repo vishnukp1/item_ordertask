@@ -7,7 +7,7 @@ export const createPurchaseOrder = async (req, res) => {
   let discountTotal = 0;
 
   items.forEach((item) => {
-    itemTotal += item.unitPrice * 2;
+    itemTotal += item.unitPrice * item.orderQty;
     discountTotal += item.discount || 0;
   });
  

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import useSuppliers from "../hooks/supplierHooks";
 import CustomInput from "../components/CustomInput";
 import useItems from "../hooks/itemSHooks";
