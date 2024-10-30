@@ -14,9 +14,10 @@ const PurchaseOrder = () => {
   const [orderDate, setOrderDate] = useState(
     new Date().toISOString().split("T")[0]
   );
-  const [itemTotal, setItemTotal] = useState(0);
-  const [discountTotal, setDiscountTotal] = useState(0);
+
   const printRef = useRef(null);
+
+  console.log(purchaseOrders);
 
   useEffect(() => {
     setFilteredItems(
@@ -66,21 +67,10 @@ const PurchaseOrder = () => {
     }
 
     setSelectedItems(updatedItems);
-    getTotals(updatedItems);
+
   };
 
-  const getTotals = (items) => {
-    let totalAmount = 0;
-    let totalDiscount = 0;
-    items.forEach((item) => {
-      const itemAmount = item.orderQty * item.unitPrice;
-      const netAmount = Math.max(itemAmount - item.discount, 0);
-      totalAmount += netAmount;
-      totalDiscount += item.discount;
-    });
-    setItemTotal(totalAmount);
-    setDiscountTotal(totalDiscount);
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,11 +86,7 @@ const PurchaseOrder = () => {
         orderQty: item.orderQty,
         itemAmount: item.orderQty * item.unitPrice,
         discount: item.discount,
-        netAmount: item.orderQty * item.unitPrice - item.discount,
       })),
-      itemTotal,
-      discountTotal,
-      netAmount: itemTotal - discountTotal,
     };
 
     try {
@@ -280,7 +266,8 @@ const PurchaseOrder = () => {
                   <tbody>
                     {order.items.map((item) => (
                       <tr key={item._id} className="border-b">
-                        <td className="px-4 py-2">{item._id}</td>
+                        <td className="px-4 py-2">{item._id}</td>{" "}
+                   
                         <td className="px-4 py-2">{item.itemName}</td>
                         <td className="px-4 py-2">{item.stockUnit}</td>
                         <td className="px-4 py-2">
@@ -290,13 +277,17 @@ const PurchaseOrder = () => {
                         <td className="px-4 py-2">{item.orderQty}</td>
                         <td className="px-4 py-2">
                           {(item.orderQty * item.unitPrice).toFixed(2)}
-                        </td>
+                        </td>{" "}
                         <td className="px-4 py-2">
                           {item.discount.toFixed(2)}
                         </td>
                         <td className="px-4 py-2">
-                          {item.netAmount.toFixed(2)}
-                        </td>
+                          {(
+                            item.orderQty * item.unitPrice -
+                            item.discount
+                          ).toFixed(2)}
+                        </td>{" "}
+                   
                       </tr>
                     ))}
                   </tbody>
