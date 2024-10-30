@@ -1,11 +1,24 @@
 import PurchaseOrder from "../models/purchaseOrderSchema.js";
 
 export const createPurchaseOrder = async (req, res) => {
-  const { supplier} = req.body;
+  const { supplier, items } = req.body;
 
+  let itemTotal = 0;
+  let discountTotal = 0;
+
+  items.forEach((item) => {
+    itemTotal += item.unitPrice * 0;
+    discountTotal += item.discount || 0;
+  });
+ 
+  const netAmount = itemTotal - discountTotal;
 
   const purchaseOrder = await PurchaseOrder.create({
-    supplier
+    supplier,
+    items,
+    itemTotal,
+    discount: discountTotal,
+    netAmount,
   });
 
   res.status(201).json({
