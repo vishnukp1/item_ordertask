@@ -21,7 +21,7 @@ const ItemCreate = () => {
       stockUnit: formRef.current.stockUnit.value,
       unitPrice: formRef.current.unitPrice.value,
       status: formRef.current.status.value,
-      imagePath: formRef.current.images.files[0], /
+      imagePath: formRef.current.images.files[0], 
     };
 
     await addItem(item);
