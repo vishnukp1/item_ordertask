@@ -14,6 +14,7 @@ const PurchaseOrder = () => {
   const [orderDate, setOrderDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [itemTotal, setItemTotal] = useState(0);
 
   const printRef = useRef(null);
 
