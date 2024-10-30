@@ -12,10 +12,11 @@ export const createItem = async (req, res) => {
       unitPrice,
       status,
     } = req.body;
-
+   
     const imagePaths = req.files
       ? req.files.map((file) => `/uploads/${file.filename}`)
       : [];
+
 
     const newItem = {
       name,

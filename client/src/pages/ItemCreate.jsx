@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import useSuppliers from "../hooks/supplierHooks";
 import CustomInput from "../components/CustomInput";
 import useItems from "../hooks/itemSHooks";
@@ -6,56 +6,29 @@ import useItems from "../hooks/itemSHooks";
 const ItemCreate = () => {
   const { suppliers, error: suppliersError } = useSuppliers();
   const { addItem, error: itemError, success, setSuccess } = useItems();
-  const [newItem, setNewItem] = useState({
-    name: "",
-    location: "",
-    brand: "",
-    category: "",
-    supplierId: "",
-    stockUnit: "",
-    unitPrice: "",
-    status: "Enabled",
-    images: [],
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewItem((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const handleImageChange = (e) => {
-    setNewItem((prevState) => ({
-      ...prevState,
-      images: Array.from(e.target.files),
-    }));
-  };
+  const formRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    Object.keys(newItem).forEach((key) => {
-      if (key === "images") {
-        newItem.images.forEach((file) => formData.append("images", file));
-      } else {
-        formData.append(key, newItem[key]);
-      }
-    });
+    const item = {
+      name: formRef.current.name.value,
+      location: formRef.current.location.value,
+      brand: formRef.current.brand.value,
+      category: formRef.current.category.value,
+      supplierId: formRef.current.supplierId.value,
+      stockUnit: formRef.current.stockUnit.value,
+      unitPrice: formRef.current.unitPrice.value,
+      status: formRef.current.status.value,
+      imagePath: formRef.current.images.files[0], /
+    };
 
-    await addItem(formData);
+    await addItem(item);
 
     if (success) {
-      setNewItem({
-        name: "",
-        location: "",
-        brand: "",
-        category: "",
-        supplierId: "",
-        stockUnit: "",
-        unitPrice: "",
-        status: "Enabled",
-        images: [],
-      });
+     
+      formRef.current.reset(); 
       setSuccess(false);
     }
   };
@@ -72,41 +45,31 @@ const ItemCreate = () => {
           <p style={{ color: "green" }}>Item created successfully!</p>
         )}
 
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <form ref={formRef} onSubmit={handleSubmit} noValidate>
           <CustomInput
             type="text"
             name="name"
             placeholder="Item Name"
-            value={newItem.name}
-            onChange={handleChange}
             required
           />
           <CustomInput
             type="text"
             name="location"
             placeholder="Inventory Location"
-            value={newItem.location}
-            onChange={handleChange}
           />
           <CustomInput
             type="text"
             name="brand"
             placeholder="Brand"
-            value={newItem.brand}
-            onChange={handleChange}
           />
           <CustomInput
             type="text"
             name="category"
             placeholder="Category"
-            value={newItem.category}
-            onChange={handleChange}
           />
           <label htmlFor="supplierId">Supplier:</label>
           <select
             name="supplierId"
-            value={newItem.supplierId}
-            onChange={handleChange}
             className="mb-4 w-full px-2 py-2 border rounded-md"
           >
             <option value="">Select Supplier</option>
@@ -120,23 +83,17 @@ const ItemCreate = () => {
             type="text"
             name="stockUnit"
             placeholder="Stock Unit"
-            value={newItem.stockUnit}
-            onChange={handleChange}
           />
           <CustomInput
             type="number"
             name="unitPrice"
             placeholder="Unit Price"
-            value={newItem.unitPrice}
-            onChange={handleChange}
           />
           <div className="flex-col">
             <div>
               <label htmlFor="status">Status:</label>
               <select
                 name="status"
-                value={newItem.status}
-                onChange={handleChange}
                 className="mb-4 w-full px-2 py-2 border rounded-md"
               >
                 <option value="Enabled">Enabled</option>
@@ -147,9 +104,8 @@ const ItemCreate = () => {
               <input
                 type="file"
                 name="images"
-                onChange={handleImageChange}
-                multiple
                 className="mb-4"
+                multiple 
               />
             </div>
           </div>
