@@ -45,6 +45,9 @@ const PurchaseOrder = () => {
   const updateItemDetails = (index, field, value) => {
     const updatedItems = [...selectedItems];
 
+    console.log("value",value);
+    
+
     if (field === "item") {
       const selectedItem = items.find((item) => item._id === value);
       if (selectedItem) {
